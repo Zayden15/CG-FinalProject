@@ -3,7 +3,7 @@ import { MeshStandardMaterial } from 'three/src/materials/MeshStandardMaterial.j
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import GUI from 'lil-gui'
-
+//import CSG from 'three-csg-ts'
 
 
 /**
@@ -31,7 +31,7 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 //Background
-const bgTexture = new THREE.TextureLoader().load("texture.jpg");
+const bgTexture = new THREE.TextureLoader().load("img/texture.jpg");
 const bgGeometry = new THREE.PlaneGeometry(5, 5);
 const bgMaterial = new THREE.MeshBasicMaterial({ map: bgTexture });
 const bgMesh = new THREE.Mesh(bgGeometry, bgMaterial);
@@ -39,7 +39,7 @@ bgMesh.position.set(0, 0, -2.5);
 scene.add(bgMesh);
 
 const hdrEquirect = new RGBELoader().load(
-    "empty_warehouse_01_2k.hdr",
+    "img/empty_warehouse_01_2k.hdr",
     () => {
       hdrEquirect.mapping = THREE.EquirectangularReflectionMapping;
     }
@@ -51,12 +51,12 @@ const hdrEquirect = new RGBELoader().load(
 
 //Texture
 const textureLoader = new THREE.TextureLoader();
-const normalMapTexture = textureLoader.load("normal.jpg");
+const normalMapTexture = textureLoader.load("img/normal.jpg");
 normalMapTexture.wrapS = THREE.RepeatWrapping;
 normalMapTexture.wrapT = THREE.RepeatWrapping;
 
 const geometry = new THREE.IcosahedronGeometry(2, 20);
-const material = new THREE.MeshPhysicalMaterial({  
+const glassMaterial = new THREE.MeshPhysicalMaterial({  
 
   transmission: options.transmission,
   thickness: options.thickness,
@@ -71,8 +71,56 @@ const material = new THREE.MeshPhysicalMaterial({
   clearcoatNormalScale: new THREE.Vector2(options.clearcoatNormalScale)
 
   });
-const mesh = new THREE.Mesh(geometry, material)
+const mesh = new THREE.Mesh(geometry, glassMaterial)
 scene.add(mesh);
+
+// Create a hemisphere by specifying the phi length to be half of a full sphere (PI)
+const radius = 2;  // Radius of the sphere
+const widthSegments = 32;  // Number of horizontal segments
+const heightSegments = 32;  // Number of vertical segments
+const phiStart = 0;  // Starting angle
+const phiLength = Math.PI;  // Ending angle, half of the circle
+const thetaStart = 0;  // Start at the top of the sphere
+const thetaLength = Math.PI;  // Go down to the bottom
+
+const semiCircleTerrain = new THREE.SphereGeometry(radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength);
+
+// Material
+const material = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    side: THREE.DoubleSide,
+    wireframe: false,
+    metalness: 0.5,
+    roughness: 0.5
+});
+
+// Mesh
+const terrainMesh = new THREE.Mesh(semiCircleTerrain, material);
+
+// Extra Cirle
+const baseGeometry = new THREE.CircleGeometry(2, 32);
+const baseMaterial = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    side: THREE.DoubleSide
+});
+const baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
+baseMesh.rotation.x = -Math.PI / 2; // Rotate the circle to close the bottom of the hemisphere
+baseMesh.position.y = -0.01;
+
+// Position
+const rotationAngleX = Math.PI / -2;
+const rotationAngleY = Math.PI;
+const rotationAngleZ = 0;
+
+// Apply rotation
+terrainMesh.rotation.x = rotationAngleX;
+terrainMesh.rotation.y = rotationAngleY;
+terrainMesh.rotation.z = rotationAngleZ;
+
+// Add to scene
+scene.add(baseMesh);
+scene.add(terrainMesh);
+
 
 //Light 
 const light = new THREE.DirectionalLight(0xfff0dd, 1);
@@ -109,13 +157,38 @@ window.addEventListener('resize', () =>
 // Base camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
 camera.position.x = 3
-camera.position.y = 3
+camera.position.y = 5
 camera.position.z = 3
 scene.add(camera)
 
 // Controls
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
+
+// Snowflake
+const snowflakeGeometry = new THREE.BoxGeometry(0.05, 0.05, 0.05);
+
+//snowflake material
+const snowflakeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+//snow particle system
+const snowParticles = new THREE.Group();
+const numParticles = 700;
+const globeRadius = 1.8;
+for (let i = 0; i < numParticles; i++) {
+    //randomise positions in sphere shape
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.random() * Math.PI;
+    const radius = Math.cbrt(Math.random()) * globeRadius; //cube root for even distribution
+    const x = radius * Math.sin(phi) * Math.cos(theta);
+    const y = radius * Math.cos(phi);
+    const z = radius * Math.sin(phi) * Math.sin(theta);
+    const snowflake = new THREE.Mesh(snowflakeGeometry, snowflakeMaterial);
+    snowflake.position.set(x, y, z);
+    snowParticles.add(snowflake);
+}
+scene.add(snowParticles);
+
 
 /**
  * Renderer
@@ -132,22 +205,35 @@ renderer.setClearColor(0x1f1e1c, 1);
  */
 const clock = new THREE.Clock()
 
-const tick = () =>
-{
-    const elapsedTime = clock.getElapsedTime()
+function animate() {
+  requestAnimationFrame(animate);
+  
+  const elapsedTime = clock.getElapsedTime()
 
-    // Update controls
-    controls.update()
+  // Update controls
+  controls.update()
 
-    // Render
-    renderer.render(scene, camera)
+  //snowflake positions
+  snowParticles.children.forEach(snowflake => {
+      //make snowflakes fall
+      snowflake.position.y -= 0.001;
+      //make snowflakes reset position once fallen
+      if (snowflake.position.y < -1) {
+          //randomise positioning but in a spherical shape
+          const theta = Math.random() * Math.PI * 2;
+          const phi = Math.random() * Math.PI;
+          const radius = Math.cbrt(Math.random()) * globeRadius; //cube root for even distribution
+          const x = radius * Math.sin(phi) * Math.cos(theta);
+          const y = radius * Math.cos(phi);
+          const z = radius * Math.sin(phi) * Math.sin(theta);
+          snowflake.position.set(x, y, z);
+      }
+  });
 
-    // Call tick again on the next frame
-    window.requestAnimationFrame(tick)
+  camera.lookAt(scene.position);
+  renderer.render(scene, camera);
 }
-
-tick()
-
+animate();
 
 /**
  * Debug UI
