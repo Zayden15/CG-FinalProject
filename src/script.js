@@ -31,12 +31,12 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 //Background
-const bgTexture = new THREE.TextureLoader().load("img/texture.jpg");
+/*const bgTexture = new THREE.TextureLoader().load("img/texture.jpg");
 const bgGeometry = new THREE.PlaneGeometry(5, 5);
 const bgMaterial = new THREE.MeshBasicMaterial({ map: bgTexture });
 const bgMesh = new THREE.Mesh(bgGeometry, bgMaterial);
 bgMesh.position.set(0, 0, -2.5);
-scene.add(bgMesh);
+scene.add(bgMesh);*/
 
 const hdrEquirect = new RGBELoader().load(
     "img/empty_warehouse_01_2k.hdr",
@@ -55,7 +55,7 @@ const normalMapTexture = textureLoader.load("img/normal.jpg");
 normalMapTexture.wrapS = THREE.RepeatWrapping;
 normalMapTexture.wrapT = THREE.RepeatWrapping;
 
-const geometry = new THREE.IcosahedronGeometry(2, 20);
+const geometry = new THREE.IcosahedronGeometry(3, 20);
 const glassMaterial = new THREE.MeshPhysicalMaterial({  
 
   transmission: options.transmission,
@@ -75,7 +75,7 @@ const mesh = new THREE.Mesh(geometry, glassMaterial)
 scene.add(mesh);
 
 // Create a hemisphere by specifying the phi length to be half of a full sphere (PI)
-const radius = 2;  // Radius of the sphere
+const radius = 3;  // Radius of the sphere
 const widthSegments = 32;  // Number of horizontal segments
 const heightSegments = 32;  // Number of vertical segments
 const phiStart = 0;  // Starting angle
@@ -98,7 +98,7 @@ const material = new THREE.MeshStandardMaterial({
 const terrainMesh = new THREE.Mesh(semiCircleTerrain, material);
 
 // Extra Cirle
-const baseGeometry = new THREE.CircleGeometry(2, 32);
+const baseGeometry = new THREE.CircleGeometry(3, 32);
 const baseMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     side: THREE.DoubleSide
@@ -174,7 +174,7 @@ const snowflakeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
 //snow particle system
 const snowParticles = new THREE.Group();
 const numParticles = 700;
-const globeRadius = 1.8;
+const globeRadius = 2.9;
 for (let i = 0; i < numParticles; i++) {
     //randomise positions in sphere shape
     const theta = Math.random() * Math.PI * 2;
