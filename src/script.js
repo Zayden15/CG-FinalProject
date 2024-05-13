@@ -37,7 +37,7 @@ const bgGeometry = new THREE.PlaneGeometry(5, 5);
 const bgMaterial = new THREE.MeshBasicMaterial({ map: bgTexture });
 const bgMesh = new THREE.Mesh(bgGeometry, bgMaterial);
 bgMesh.position.set(0, 0, -2.5);
-scene.add(bgMesh);
+//scene.add(bgMesh);
 
 const hdrEquirect = new RGBELoader().load(
     "img/empty_warehouse_01_2k.hdr",
