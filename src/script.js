@@ -3,6 +3,7 @@ import { MeshStandardMaterial } from 'three/src/materials/MeshStandardMaterial.j
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import GUI from 'lil-gui'
+import ScreenShake from './ScreenShake.js';
 //import CSG from 'three-csg-ts'
 
 
@@ -161,6 +162,9 @@ camera.position.y = 5
 camera.position.z = 3
 scene.add(camera)
 
+// ScreenShake
+const screenShakeInstance = ScreenShake();
+
 // Controls
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
@@ -187,7 +191,7 @@ for (let i = 0; i < numParticles; i++) {
     snowflake.position.set(x, y, z);
     snowParticles.add(snowflake);
 }
-scene.add(snowParticles);
+//scene.add(snowParticles);
 
 
 /**
@@ -205,6 +209,9 @@ renderer.setClearColor(0x1f1e1c, 1);
  */
 const clock = new THREE.Clock()
 
+
+
+// Animation Loop
 function animate() {
   requestAnimationFrame(animate);
   
@@ -212,23 +219,23 @@ function animate() {
 
   // Update controls
   controls.update()
-
+  screenShakeInstance.update(camera);
   //snowflake positions
-  snowParticles.children.forEach(snowflake => {
-      //make snowflakes fall
-      snowflake.position.y -= 0.001;
-      //make snowflakes reset position once fallen
-      if (snowflake.position.y < -1) {
-          //randomise positioning but in a spherical shape
-          const theta = Math.random() * Math.PI * 2;
-          const phi = Math.random() * Math.PI;
-          const radius = Math.cbrt(Math.random()) * globeRadius; //cube root for even distribution
-          const x = radius * Math.sin(phi) * Math.cos(theta);
-          const y = radius * Math.cos(phi);
-          const z = radius * Math.sin(phi) * Math.sin(theta);
-          snowflake.position.set(x, y, z);
-      }
-  });
+  if (screenShakeInstance.snowEnabled) {
+    scene.add(snowParticles);
+    snowParticles.children.forEach(snowflake => {
+        snowflake.position.y -= 0.001;
+        if (snowflake.position.y < -1) {
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.random() * Math.PI;
+            const radius = Math.cbrt(Math.random()) * globeRadius;
+            const x = radius * Math.sin(phi) * Math.cos(theta);
+            const y = radius * Math.cos(phi);
+            const z = radius * Math.sin(phi) * Math.sin(theta);
+            snowflake.position.set(x, y, z);
+        }
+    });
+}
 
   camera.lookAt(scene.position);
   renderer.render(scene, camera);
@@ -273,3 +280,6 @@ gui.add(options, "clearcoatNormalScale", 0, 5, 0.01).onChange((val) => {
 gui.add(options, "normalRepeat", 1, 4, 1).onChange((val) => {
   normalMapTexture.repeat.set(val, val);
 });
+gui.add({triggerShake: function() {
+  screenShakeInstance.shake(camera, new THREE.Vector3(0.5, 0.5, 0.5), 1000);
+}}, 'triggerShake').name('Trigger Shake');
