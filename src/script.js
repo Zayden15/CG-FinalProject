@@ -32,7 +32,7 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 //Background
-/*const bgTexture = new THREE.TextureLoader().load("img/texture.jpg");
+const bgTexture = new THREE.TextureLoader().load("img/texture.jpg");
 const bgGeometry = new THREE.PlaneGeometry(5, 5);
 const bgMaterial = new THREE.MeshBasicMaterial({ map: bgTexture });
 const bgMesh = new THREE.Mesh(bgGeometry, bgMaterial);
