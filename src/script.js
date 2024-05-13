@@ -10,6 +10,7 @@ import Tree from './components/Tree/index.module.js';
 import snowman from './components/snowman.js';
 import House from './components/house.js';
 import snowFall from './components/snowfall.js';
+import forest from './components/forest.js';
 
 let snowActive = false;
 
@@ -192,6 +193,10 @@ house.position.y = 0.5;
 const snowfall = new snowFall();
 snowfall.scale.set(0.005, 0.005, 0.005);
 
+// forest
+const Forest = new forest();
+Forest.scale.set(0.0035, 0.0035, 0.0035);
+
 // Position
 const rotationAngleX = Math.PI / -2;
 const rotationAngleY = Math.PI;
@@ -237,7 +242,7 @@ scene.add(ground)
 scene.add(snowMan)
 scene.add(house)
 scene.add(snowfall)
-
+scene.add(Forest)
 
 
 /////////////
