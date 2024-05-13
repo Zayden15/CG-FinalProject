@@ -69,7 +69,7 @@ import {
   class Trees extends Group {
     constructor(loadingManager) {
       super();
-      this.treeNum = 100;
+      this.treeNum = 50;
       this.noTreeField = 0.25;
       const positions = [];
       let count = 0;
