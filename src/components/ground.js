@@ -20,15 +20,14 @@ export default class Ground extends Mesh {
   constructor(loadingManager = new LoadingManager()) {
     const geometry = new CircleGeometry(3, 32);
     
-    // Correcting vertex manipulation to work with Three.js BufferGeometry
     const positions = geometry.attributes.position.array;
     for (let i = 0; i < positions.length; i += 3) {
       const x = positions[i];
       const y = positions[i + 1];
-      const noise = simplexNoise(x * 1, y * 1) * 0.1; // Generate noise
-      positions[i + 2] += noise; // Apply noise to z position
+      const noise = simplexNoise(x * 1, y * 1) * 0.1; 
+      positions[i + 2] += noise; 
     }
-    geometry.attributes.position.needsUpdate = true; // Important to update the geometry
+    geometry.attributes.position.needsUpdate = true; 
 
     const textureLoader = new TextureLoader(loadingManager);
     const baseTexture = textureLoader.load(groundbase);

@@ -47,9 +47,6 @@ function ScreenShake() {
 			this._endPoint = new THREE.Vector3().addVectors( camera.position, vecToAdd );
 		},
 
-
-
-
 		computePosition: function computePosition(camera, interval) {
             let position = 0;
             // Damped shake effect
@@ -58,12 +55,6 @@ function ScreenShake() {
             }
             camera.position.lerpVectors(this._startPoint, this._endPoint, position);
         },
-
-		// This is a quadratic function that return 0 at first, then return 0.5 when t=0.5,
-		// then return 0 when t=1 ;
-		getQuadra: function getQuadra(t) {
-			return 9.436896e-16 + (4*t) - (4*(t*t)) ;
-		}
 
 	};
 

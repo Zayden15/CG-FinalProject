@@ -90,7 +90,7 @@ controls.enableDamping = true
 // Screen Shake
 const screenShakeInstance = ScreenShake();
 function triggerShake() {
-  screenShakeInstance.shake(camera, new THREE.Vector3(0.5, 0.5, 0.5), 1000);
+  screenShakeInstance.shake(camera, new THREE.Vector3(2, 2, 0), 1000);
   snowActive = true;
 }
 
@@ -292,28 +292,28 @@ animate();
 ///////////////
 
 gui.add(options, "transmission", 0, 1, 0.01).onChange((val) => {
-  material.transmission = val;
+  glassMaterial.transmission = val;
 });
 gui.add(options, "thickness", 0, 5, 0.1).onChange((val) => {
-  material.thickness = val;
+  glassMaterial.thickness = val;
 });
 gui.add(options, "roughness", 0, 1, 0.01).onChange((val) => {
-  material.roughness = val;
+  glassMaterial.roughness = val;
 });
 gui.add(options, "envMapIntensity", 0, 3, 0.1).onChange((val) => {
-  material.envMapIntensity = val;
+  glassMaterial.envMapIntensity = val;
 });
 gui.add(options, "clearcoat", 0, 1, 0.01).onChange((val) => {
-  material.clearcoat = val;
+  glassMaterial.clearcoat = val;
 });
 gui.add(options, "clearcoatRoughness", 0, 1, 0.01).onChange((val) => {
-  material.clearcoatRoughness = val;
+  materglassMaterialial.clearcoatRoughness = val;
 });
 gui.add(options, "normalScale", 0, 5, 0.01).onChange((val) => {
-  material.normalScale.set(val, val);
+  glassMaterial.normalScale.set(val, val);
 });
 gui.add(options, "clearcoatNormalScale", 0, 5, 0.01).onChange((val) => {
-  material.clearcoatNormalScale.set(val, val);
+  glassMaterial.clearcoatNormalScale.set(val, val);
 });
 gui.add(options, "normalRepeat", 1, 4, 1).onChange((val) => {
   normalMapTexture.repeat.set(val, val);
