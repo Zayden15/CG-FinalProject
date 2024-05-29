@@ -183,11 +183,15 @@ const tree = new Tree();
 const snowMan = new snowman();
 snowMan.scale.set(0.005, 0.005, 0.005);
 snowMan.position.y = 0.5;
+snowMan.position.x = 1;
+snowMan.rotation.y = 1;
 
 // House
 const house = new House();
 house.scale.set(0.005, 0.005, 0.005);
 house.position.y = 0.5;
+house.position.z = 1;
+house.rotation.y = 1;
 
 // SnowFall
 const snowfall = new snowFall();
@@ -195,7 +199,10 @@ snowfall.scale.set(0.005, 0.005, 0.005);
 
 // forest
 const Forest = new forest();
-Forest.scale.set(0.0035, 0.0035, 0.0035);
+Forest.scale.set(0.003, 0.003, 0.002);
+Forest.position.y = 0.5;
+Forest.position.x = 0.5;
+Forest.rotation.y = 3;
 
 // Position
 const rotationAngleX = Math.PI / -2;

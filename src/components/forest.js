@@ -66,47 +66,72 @@ import {
   }
   
   // Trees group
-  class Trees extends Group {
-    constructor(loadingManager) {
-      super();
-      this.treeNum = 50;
-      this.noTreeField = 0.25;
-      const positions = [];
-      let count = 0;
-      for (let i = 0; i < this.treeNum; i++) {
-        const x = Math.random() * 2 - 1;
-        const y = Math.random() * 2 - 1;
-        if (x ** 2 + y ** 2 >= this.noTreeField) {
-          positions.push([x * 600, 100, y * 600]);
-          count += 1;
+class Trees extends Group {
+  constructor(loadingManager) {
+    super();
+    this.treeNum = 30;
+    this.noTreeField = 0.25;
+    const positions = new Set();
+    let count = 0;
+
+    const radius = 1000; // Radius of the semi-circle
+    const minAngle = -Math.PI / 2; // Start angle (leftmost point of the semi-circle)
+    const maxAngle = Math.PI / 2; // End angle (rightmost point of the semi-circle)
+    
+    const isOverlap = (x, y, z) => {
+      for (let pos of positions) {
+        const [px, py, pz] = pos;
+        const distance = Math.sqrt((x - px) ** 2 + (y - py) ** 2 + (z - pz) ** 2);
+        if (distance < 100) { // Adjust this value based on the size of the trees and leaves
+          return true;
         }
       }
-  
-      const trunk = new Trunk(loadingManager);
-      for (let i = 0; i < count; i++) {
-        const [x, y, z] = positions[i];
-  
-        const t = trunk.clone();
-        t.position.set(x, y, z);
-  
-        const leaf1 = new Leaf(1);
-        leaf1.position.set(x, y + 100, z);
-        const leaf2 = new Leaf(2);
-        leaf2.position.set(x, y + 150, z);
-        const leaf3 = new Leaf(3);
-        leaf3.position.set(x, y + 200, z);
-  
-        const snow1 = new Snow();
-        snow1.position.set(x + 20, y + 200, z + 20);
-        const snow2 = new Snow();
-        snow2.position.set(x - 35, y + 150, z + 35);
-        const snow3 = new Snow();
-        snow3.position.set(x + 40, y + 50, z - 40);
-  
-        this.add(t, leaf1, leaf2, leaf3, snow1, snow2, snow3);
+      return false;
+    };
+
+    const addPosition = (x, y, z) => {
+      positions.add([x, y, z]);
+    };
+
+    while (count < this.treeNum) {
+      const angle = Math.random() * (maxAngle - minAngle) + minAngle;
+      const x = Math.cos(angle) * radius;
+      const z = Math.sin(angle) * radius;
+      const y = 100; // Height of the trees
+
+      if (x ** 2 + z ** 2 >= this.noTreeField * radius * radius) {
+        if (!isOverlap(x, z)) {
+          addPosition(x, y, z);
+          count++;
+        }
       }
     }
+
+    const trunk = new Trunk(loadingManager);
+    for (let pos of positions) {
+      const [x, y, z] = pos;
+
+      const t = trunk.clone();
+      t.position.set(x, y, z);
+
+      const leaf1 = new Leaf(1);
+      leaf1.position.set(x, y + 100, z);
+      const leaf2 = new Leaf(2);
+      leaf2.position.set(x, y + 150, z);
+      const leaf3 = new Leaf(3);
+      leaf3.position.set(x, y + 200, z);
+
+      const snow1 = new Snow();
+      snow1.position.set(x + 20, y + 200, z + 20);
+      const snow2 = new Snow();
+      snow2.position.set(x - 35, y + 150, z + 35);
+      const snow3 = new Snow();
+      snow3.position.set(x + 40, y + 50, z - 40);
+
+      this.add(t, leaf1, leaf2, leaf3, snow1, snow2, snow3);
+    }
   }
+}
   
   export default Trees;
   
