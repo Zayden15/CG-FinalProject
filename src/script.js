@@ -34,13 +34,13 @@ const options = {
   normalRepeat: 1
 };
 
-// RGBELoader
-const hdrEquirect = new RGBELoader().load(
-  "img/empty_warehouse_01_2k.hdr",
-  () => {
-    hdrEquirect.mapping = THREE.EquirectangularReflectionMapping;
-  }
-);
+// // RGBELoader
+// const hdrEquirect = new RGBELoader().load(
+//   "img/empty_warehouse_01_2k.hdr",
+//   () => {
+//     hdrEquirect.mapping = THREE.EquirectangularReflectionMapping;
+//   }
+// );
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
