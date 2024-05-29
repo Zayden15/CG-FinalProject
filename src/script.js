@@ -126,14 +126,24 @@ const clock = new THREE.Clock()
     console.log("❌ error while loading");
   };
 }
+//TEXTURE LOADER
+const textureLoader = new THREE.TextureLoader();
 
+//////////////////////////////
+////// ENVIRONMENT MAP////////
+//////////////////////////////
+const environmentMap = textureLoader.load('/blockadesLabsSkybox/winter.jpg')
+console.log(environmentMap)
+environmentMap.mapping = THREE.EquirectangularReflectionMapping
+environmentMap.colorSpace = THREE.SRGBColorSpace
+scene.background = environmentMap
 
 ////////////////
 // GEOMETRIES //
 ////////////////
 
 // Globe Glass
-const textureLoader = new THREE.TextureLoader();
+
 const normalMapTexture = textureLoader.load("img/normal.jpg");
 normalMapTexture.wrapS = THREE.RepeatWrapping;
 normalMapTexture.wrapT = THREE.RepeatWrapping;
@@ -143,7 +153,7 @@ const glassMaterial = new THREE.MeshPhysicalMaterial({
   transmission: options.transmission,
   thickness: options.thickness,
   roughness: options.roughness,
-  envMap: hdrEquirect,
+  envMap: environmentMap,
   envMapIntensity: options.envMapIntensity,
   clearcoat: options.clearcoat,
   clearcoatRoughness: options.clearcoatRoughness,
