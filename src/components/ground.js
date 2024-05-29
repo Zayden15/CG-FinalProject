@@ -19,6 +19,7 @@ const simplexNoise = createNoise2D();
 export default class Ground extends Mesh {
   constructor(loadingManager = new LoadingManager()) {
     const geometry = new CircleGeometry(3, 32);
+    super();
     
     const positions = geometry.attributes.position.array;
     for (let i = 0; i < positions.length; i += 3) {
@@ -34,6 +35,8 @@ export default class Ground extends Mesh {
     const normalMapTexture = textureLoader.load(groundnormal);
     const roughMapTexture = textureLoader.load(groundrough);
     const ambientMapTexture = textureLoader.load(groundam);
+    const snowMeshTexture = textureLoader.load(snowMesh);
+
 
     const material = new MeshStandardMaterial({
       map: baseTexture,
@@ -45,8 +48,26 @@ export default class Ground extends Mesh {
       side: DoubleSide,
     });
 
-    super(geometry, material);
-    this.rotation.x = MathUtils.degToRad(-90);
-    this.receiveShadow = true;
+    // Snow overlay material
+    const overlayMaterial = new MeshStandardMaterial({
+      map: snowMeshTexture,
+      transparent: true,
+      opacity: 1,
+      side: DoubleSide,
+    });
+
+
+    // Ground mesh
+    const groundMesh = new Mesh(geometry, material);
+    groundMesh.rotation.x = MathUtils.degToRad(-90);
+    groundMesh.receiveShadow = true;
+
+    // Overlay mesh
+    const overlayMesh = new Mesh(geometry, overlayMaterial);
+    overlayMesh.rotation.x = MathUtils.degToRad(-90);
+    overlayMesh.receiveShadow = true;
+
+    this.add(groundMesh);
+    this.add(overlayMesh);
   }
 }
