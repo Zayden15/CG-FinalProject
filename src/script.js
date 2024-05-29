@@ -13,6 +13,7 @@ import snowFall from './components/snowfall.js';
 import forest from './components/forest.js';
 import Table from './components/table.js';
 import Stand from './components/Stand.js';
+import MusicHandler from './components/MusicHandler.js';
 
 let snowActive = false;
 
@@ -256,6 +257,26 @@ for (let i = 0; i < numParticles; i++) {
     snowParticles.add(snowflake);
 }
 
+// Music
+const musicHandler = new MusicHandler();
+
+// Load an audio file
+musicHandler.loadAudio('/audio/jingle.mp3').then(() => {
+  // Play the audio
+  musicHandler.play();
+});
+
+document.getElementById('playButton').addEventListener('click', () => {
+  musicHandler.play();
+});
+
+document.getElementById('stopButton').addEventListener('click', () => {
+  musicHandler.stop();
+});
+
+window.onload = () => {
+  musicHandler.play();
+};
 
 ////////////////
 //Add To Scene//
