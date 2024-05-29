@@ -11,6 +11,7 @@ import snowman from './components/snowman.js';
 import House from './components/house.js';
 import snowFall from './components/snowfall.js';
 import forest from './components/forest.js';
+import Table from './components/table.js';
 
 let snowActive = false;
 
@@ -193,6 +194,11 @@ house.position.y = 0.5;
 house.position.z = 1;
 house.rotation.y = 1;
 
+// Table
+const table = new Table();
+table.position.y = -5;
+table.rotation.y = 1;
+
 // SnowFall
 const snowfall = new snowFall();
 snowfall.scale.set(0.005, 0.005, 0.005);
@@ -250,7 +256,7 @@ scene.add(snowMan)
 scene.add(house)
 scene.add(snowfall)
 scene.add(Forest)
-
+scene.add(table)
 
 /////////////
 //Animation//
