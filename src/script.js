@@ -266,18 +266,6 @@ musicHandler.loadAudio('/audio/jingle.mp3').then(() => {
   musicHandler.play();
 });
 
-document.getElementById('playButton').addEventListener('click', () => {
-  musicHandler.play();
-});
-
-document.getElementById('stopButton').addEventListener('click', () => {
-  musicHandler.stop();
-});
-
-window.onload = () => {
-  musicHandler.play();
-};
-
 ////////////////
 //Add To Scene//
 ////////////////
@@ -356,9 +344,9 @@ gui.add(options, "envMapIntensity", 0, 3, 0.1).onChange((val) => {
 gui.add(options, "clearcoat", 0, 1, 0.01).onChange((val) => {
   glassMaterial.clearcoat = val;
 });
-// gui.add(options, "clearcoatRoughness", 0, 1, 0.01).onChange((val) => {
-//   materglassMaterialial.clearcoatRoughness = val;
-// });
+gui.add(options, "clearcoatRoughness", 0, 1, 0.01).onChange((val) => {
+   glassMaterial.clearcoatRoughness = val;
+});
 gui.add(options, "normalScale", 0, 5, 0.01).onChange((val) => {
   glassMaterial.normalScale.set(val, val);
 });
@@ -368,5 +356,6 @@ gui.add(options, "clearcoatNormalScale", 0, 5, 0.01).onChange((val) => {
 gui.add(options, "normalRepeat", 1, 4, 1).onChange((val) => {
   normalMapTexture.repeat.set(val, val);
 });
-gui.add({ triggerShake: triggerShake }, 'triggerShake').name('Trigger Shake');
-
+gui.add({ triggerShake: triggerShake }, 'triggerShake').name('Shake');
+gui.add({ play: () => musicHandler.play() }, 'play').name('Play');
+gui.add({ pause: () => musicHandler.pause() }, 'pause').name('Pause');

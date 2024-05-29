@@ -24,6 +24,7 @@ class MusicHandler {
       if (this.audioBuffer && !this.isPlaying) {
         this.source = this.audioContext.createBufferSource();
         this.source.buffer = this.audioBuffer;
+        this.source.loop = true; // Enable looping
         this.source.connect(this.audioContext.destination);
         this.startTime = this.audioContext.currentTime - this.pauseTime;
         this.source.start(0, this.pauseTime);
