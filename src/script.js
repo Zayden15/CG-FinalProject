@@ -26,10 +26,10 @@ const options = {
   thickness: 0,
   roughness: 0,
   envMapIntensity: 1.5,
-  clearcoat: 1,
-  clearcoatRoughness: 0.1,
-  normalScale: 1,
-  clearcoatNormalScale: 0.3,
+  clearcoat: 0,
+  clearcoatRoughness: 0,
+  normalScale: 0,
+  clearcoatNormalScale: 0,
   normalRepeat: 1
 };
 
@@ -329,9 +329,9 @@ gui.add(options, "envMapIntensity", 0, 3, 0.1).onChange((val) => {
 gui.add(options, "clearcoat", 0, 1, 0.01).onChange((val) => {
   glassMaterial.clearcoat = val;
 });
-gui.add(options, "clearcoatRoughness", 0, 1, 0.01).onChange((val) => {
-  materglassMaterialial.clearcoatRoughness = val;
-});
+// gui.add(options, "clearcoatRoughness", 0, 1, 0.01).onChange((val) => {
+//   materglassMaterialial.clearcoatRoughness = val;
+// });
 gui.add(options, "normalScale", 0, 5, 0.01).onChange((val) => {
   glassMaterial.normalScale.set(val, val);
 });
